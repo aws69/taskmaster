@@ -6,18 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/tasksImageView"-->
-    <!--        android:layout_width="352dp"-->
-    <!--        android:layout_height="292dp"-->
-    <!--        android:layout_below="@id/headingTextView"-->
-    <!--        android:layout_centerHorizontal="true"-->
-    <!--        android:src="@drawable/tasks_image"-->
-    <!--        tools:ignore="UnknownId"-->
-    <!--        tools:layout_editor_absoluteX="33dp"-->
-    <!--        tools:layout_editor_absoluteY="177dp" />-->
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="234dp"
@@ -30,6 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.122" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="359dp"
+        android:layout_height="346dp"
+        app:srcCompat="@drawable/tasks"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="156dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/allTasksButton"
@@ -55,12 +52,5 @@
         app:layout_constraintHorizontal_bias="0.411"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="359dp"
-        android:layout_height="346dp"
-        app:srcCompat="@drawable/tasks"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="156dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
