@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/tasksImageView"-->
+    <!--        android:layout_width="352dp"-->
+    <!--        android:layout_height="292dp"-->
+    <!--        android:layout_below="@id/headingTextView"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:src="@drawable/tasks_image"-->
+    <!--        tools:ignore="UnknownId"-->
+    <!--        tools:layout_editor_absoluteX="33dp"-->
+    <!--        tools:layout_editor_absoluteY="177dp" />-->
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="234dp"
+        android:layout_height="64dp"
+        android:text="MY TASKS"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.169"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.122" />
+
+    <Button
+        android:id="@+id/allTasksButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:text="ALL TASKS"
+        android:backgroundTint="#4864AB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.879"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/addTaskButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:text="ADD TASK"
+        android:backgroundTint="#4864AB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/allTasksButton"
+        app:layout_constraintHorizontal_bias="0.411"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="359dp"
+        android:layout_height="346dp"
+        app:srcCompat="@drawable/tasks"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="156dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
