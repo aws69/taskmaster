@@ -76,7 +76,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.233"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
     <Button
         android:id="@+id/addTaskButton"
