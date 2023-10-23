@@ -1,11 +1,10 @@
 package com.asac26.taskmaster;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,18 +13,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button addButton = (Button) findViewById(R.id.addTaskButton);
-
-        addButton.setOnClickListener(view -> {
-            Intent goToAddTaskIntent = new Intent(MainActivity.this, AddTaskActivity.class);
-            startActivity(goToAddTaskIntent);
+        Button addTaskButton = findViewById(R.id.addTaskHome);
+        addTaskButton.setOnClickListener(view -> {
+            System.out.println("Add Task Button Clicked");
+            Intent goToNewTaskFormIntent = new Intent(MainActivity.this, AddTasksActivity.class);
+            startActivity(goToNewTaskFormIntent);
         });
-
-        Button allButton = (Button) findViewById(R.id.allTasksButton);
-
-        allButton.setOnClickListener(view -> {
-            Intent goToAllTasksIntent = new Intent(MainActivity.this, AllTaskActivity.class);
-            startActivity(goToAllTasksIntent);
+        Button allTasksButton = findViewById(R.id.allTasksHome);
+        allTasksButton.setOnClickListener(view -> {
+            Intent goToAllTasksFormIntent = new Intent(MainActivity.this, AllTasksActivity.class);
+            startActivity(goToAllTasksFormIntent);
         });
     }
 }
