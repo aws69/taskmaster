@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.asac26.taskmaster.R;
-import com.asac26.taskmaster.TaskDetailsActivity;
+import com.asac26.taskmaster.activities.TaskDetailsActivity;
 import com.asac26.taskmaster.models.Task;
 
 import java.util.List;
 
 
 public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecyclerViewAdapter.TaskViewHolder> {
-    private List<Task> taskList;
-    private Context context;
+    private final List<Task> taskList;
+    private final Context context;
     public TasksRecyclerViewAdapter(List<Task> taskList, Context context) {
         this.taskList = taskList;
         this.context=context;
@@ -40,7 +40,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
             Intent sendTitle = new Intent(context, TaskDetailsActivity.class);
             sendTitle.putExtra("taskTitle", task.getTitle());
             sendTitle.putExtra("taskBody", task.getBody());
-            sendTitle.putExtra("taskStatus", task.getState());
+            sendTitle.putExtra("taskStatus", task.getState().toString());
             context.startActivity(sendTitle);
         });
     }
@@ -49,10 +49,10 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
     public int getItemCount() {
         return taskList.size();
     }
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
-        private TextView titleTextView;
-        private TextView bodyTextView;
-        private TextView stateTextView;
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+        private final TextView titleTextView;
+        private final TextView bodyTextView;
+        private final TextView stateTextView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,7 +64,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         public void bindTask(Task task) {
             titleTextView.setText(task.getTitle());
             bodyTextView.setText(task.getBody());
-            stateTextView.setText(task.getState());
+            stateTextView.setText(task.getState().toString());
         }
     }
 }
