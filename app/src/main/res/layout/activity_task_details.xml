@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TaskDetailsActivity">
+    tools:context=".activities.TaskDetailsActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -74,7 +74,6 @@
         android:id="@+id/textViewStatus"
         android:layout_width="78dp"
         android:layout_height="39dp"
-        android:text="TextView"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/backButtonDescription"
         app:layout_constraintEnd_toEndOf="parent"

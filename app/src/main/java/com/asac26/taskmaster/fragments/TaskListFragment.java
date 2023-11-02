@@ -40,12 +40,11 @@ public class TaskListFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static TaskListFragment newInstance(String param1, String param2) {
-        TaskListFragment fragment = new TaskListFragment();
-//        Bundle args = new Bundle();
+        //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
 //        fragment.setArguments(args);
-        return fragment;
+        return new TaskListFragment();
     }
 
     @Override
