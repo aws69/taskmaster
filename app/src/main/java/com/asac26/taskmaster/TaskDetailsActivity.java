@@ -18,19 +18,26 @@ public class TaskDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
 
-        Intent callingIntent = getIntent();
-        if (callingIntent != null)
-            taskTitleStr = callingIntent.getStringExtra(MainActivity.TASK_TAG);
-        taskTitle = findViewById(R.id.textViewTitle);
-        if ((taskTitleStr != null))
-            taskTitle.setText(taskTitleStr);
-        else
-            taskTitle.setText("Not Specified");
-
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button backButton = findViewById(R.id.backButtonDescription);
-        backButton.setOnClickListener(view -> {
-            Intent gobackFormIntent = new Intent(TaskDetailsActivity.this, MainActivity.class);
-            startActivity(gobackFormIntent);
+        Button detailsBackButton=findViewById(R.id.backButtonDescription);
+        detailsBackButton.setOnClickListener(view -> {
+            Intent backToHomeFromDetails= new Intent(TaskDetailsActivity.this,MainActivity.class);
+            startActivity(backToHomeFromDetails);
         });
+
+        TextView title=findViewById(R.id.textViewTitle);
+        TextView description = findViewById(R.id.textViewDescription);
+        TextView status = findViewById(R.id.textViewStatus);
+
+        Intent intent=getIntent();
+        String taskTitle=intent.getStringExtra("taskTitle");
+        String taskDescription = intent.getStringExtra("taskDescription");
+        String taskStatus = intent.getStringExtra("taskStatus");
+
+        if(taskTitle!=null)
+            title.setText(taskTitle);
+        if (taskDescription != null)
+            description.setText(taskDescription);
+        if (taskStatus != null)
+            status.setText(taskStatus);
     }
 }
