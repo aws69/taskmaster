@@ -10,21 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.datastore.generated.model.Task;
 import com.asac26.taskmaster.R;
 import com.asac26.taskmaster.activities.TaskDetailsActivity;
-import com.asac26.taskmaster.models.Task;
 
 import java.util.List;
 
 
 public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecyclerViewAdapter.TaskViewHolder> {
-    private final List<Task> taskList;
-    private final Context context;
+    List<Task> taskList;
+    Context context;
     public TasksRecyclerViewAdapter(List<Task> taskList, Context context) {
         this.taskList = taskList;
         this.context=context;
     }
-
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,7 +37,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         holder.bindTask(task);
         holder.itemView.setOnClickListener(view -> {
             Intent sendTitle = new Intent(context, TaskDetailsActivity.class);
-            sendTitle.putExtra("taskTitle", task.getTitle());
+            sendTitle.putExtra("taskTitle", task.getName());
             sendTitle.putExtra("taskBody", task.getBody());
             sendTitle.putExtra("taskStatus", task.getState().toString());
             context.startActivity(sendTitle);
@@ -50,9 +49,9 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         return taskList.size();
     }
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        private final TextView titleTextView;
-        private final TextView bodyTextView;
-        private final TextView stateTextView;
+        private TextView titleTextView;
+        private TextView bodyTextView;
+        private TextView stateTextView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,7 +61,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         }
 
         public void bindTask(Task task) {
-            titleTextView.setText(task.getTitle());
+            titleTextView.setText(task.getName());
             bodyTextView.setText(task.getBody());
             stateTextView.setText(task.getState().toString());
         }
