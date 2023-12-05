@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-taskmaster-dev-11329-authRole",
+      "UnauthRoleArn": "arn:aws:iam::850329997045:role/amplify-taskmaster-dev-11329-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::850329997045:role/amplify-taskmaster-dev-11329-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-taskmaster-dev-11329-deployment",
+      "UnauthRoleName": "amplify-taskmaster-dev-11329-unauthRole",
+      "StackName": "amplify-taskmaster-dev-11329",
+      "StackId": "arn:aws:cloudformation:us-west-2:850329997045:stack/amplify-taskmaster-dev-11329/dfc806a0-8bdf-11ee-ba65-06d9e5209111",
+      "AmplifyAppId": "dsz0ra0hrm3gv"
+    },
+    "categories": {
+      "api": {
+        "taskmaster": {}
+      }
+    }
+  }
+}

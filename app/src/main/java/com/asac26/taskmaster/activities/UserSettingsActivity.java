@@ -22,10 +22,16 @@ public class UserSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_settings);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        EditText usernameEditText = findViewById(R.id.userName);
+        SharedPreferenceUsername();
+        backButton();
+    }
 
-        Button saveUsername = findViewById(R.id.buttonSaveUsername);
+
+    private void SharedPreferenceUsername(){
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        EditText usernameEditText = findViewById(R.id.editTextUsername);
+
+        Button saveUsername= findViewById(R.id.buttonSaveUsername);
         saveUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,14 +43,13 @@ public class UserSettingsActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-
-        Button settingsBackButton = findViewById(R.id.backButtonSettings);
+    private void backButton(){
+        Button settingsBackButton=findViewById(R.id.backButtonSettings);
         settingsBackButton.setOnClickListener(view -> {
-            Intent backToHomeFromSettings = new Intent(UserSettingsActivity.this, MainActivity.class);
+            Intent backToHomeFromSettings=new Intent(UserSettingsActivity.this, MainActivity.class);
             startActivity(backToHomeFromSettings);
         });
-
-
     }
 }

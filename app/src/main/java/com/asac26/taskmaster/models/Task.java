@@ -1,14 +1,11 @@
 package com.asac26.taskmaster.models;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import com.asac26.taskmaster.enums.TaskState;
 
-@Entity
+//@Entity
 public class Task {
 
-    @PrimaryKey(autoGenerate = true)
+    //@PrimaryKey(autoGenerate = true)
     public Long id;
     private String title;
     private String body;
