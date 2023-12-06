@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TASK_ID_TAG="task_Id_Tag";
     private String selectedTeam;
     public static final String TAG="homeActivity";
     private TasksRecyclerViewAdapter taskAdapter;
@@ -40,12 +41,11 @@ public class MainActivity extends AppCompatActivity {
         amplifier();
         setUpTaskListRecyclerView();
         queryTasks();
-        AddTasksButton();
+        AddTaskButton();
         AllTasksButton();
         SettingsButton();
-
     }
-    @SuppressLint("SetTextI18n")
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -55,24 +55,23 @@ public class MainActivity extends AppCompatActivity {
         user.setText(username +"'s Tasks:");
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void amplifier(){
-
         Amplify.API.query(
                 ModelQuery.list(Task.class),
                 success->{
                     Log.i(TAG,"Read tasks successfully");
                     tasks.clear();
-                    for (Task databaseTask : success.getData()) {
+                    for (Task databaseTask : success.getData()) {;
                         tasks.add(databaseTask);
                     }
-                    runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
+                    runOnUiThread(() -> {
+                        taskAdapter.notifyDataSetChanged();
+                    });
                 },
                 failure-> Log.i(TAG,"failed to read tasks")
         );
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void queryTasks() {
         Amplify.API.query(
                 ModelQuery.list(Task.class),
@@ -85,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                             tasks.add(databaseTask);
                         }
                     }
-                    runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
+                    runOnUiThread(() -> {
+                        taskAdapter.notifyDataSetChanged();
+                    });
                 },
                 failure -> Log.i(TAG, "Couldn't read tasks from DynamoDB ")
         );
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpTaskListRecyclerView(){
-        RecyclerView taskListRecycleReview = findViewById(R.id.recycleView);
+        RecyclerView taskListRecycleReview = (RecyclerView) findViewById(R.id.recycleView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         taskListRecycleReview.setLayoutManager(layoutManager);
         taskAdapter = new TasksRecyclerViewAdapter(tasks, this);
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void AddTasksButton() {
+    private void AddTaskButton() {
         Button addTaskButton = findViewById(R.id.addTaskButton);
         addTaskButton.setOnClickListener(view -> {
             Intent goToAddTaskFormIntent = new Intent(MainActivity.this, AddTasksActivity.class);
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void AllTasksButton() {
-        Button allTaskButton = findViewById(R.id.addTaskButton);
+        Button allTaskButton = findViewById(R.id.allTasksHome);
         allTaskButton.setOnClickListener(view -> {
             Intent goToAllTasksIntent = new Intent(MainActivity.this, AllTasksActivity.class);
             startActivity(goToAllTasksIntent);

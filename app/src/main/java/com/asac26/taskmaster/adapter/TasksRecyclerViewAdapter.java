@@ -1,5 +1,7 @@
 package com.asac26.taskmaster.adapter;
 
+import static com.asac26.taskmaster.activities.MainActivity.TASK_ID_TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplifyframework.datastore.generated.model.Task;
 import com.asac26.taskmaster.R;
-import com.asac26.taskmaster.activities.TaskDetailsActivity;
+import com.asac26.taskmaster.activities.EditTaskActivity;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         this.taskList = taskList;
         this.context=context;
     }
+
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,10 +39,12 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         Task task = taskList.get(position);
         holder.bindTask(task);
         holder.itemView.setOnClickListener(view -> {
-            Intent sendTitle = new Intent(context, TaskDetailsActivity.class);
+            Intent sendTitle = new Intent(context, EditTaskActivity.class);
             sendTitle.putExtra("taskTitle", task.getName());
             sendTitle.putExtra("taskBody", task.getBody());
             sendTitle.putExtra("taskStatus", task.getState().toString());
+            sendTitle.putExtra("taskTeam",task.getTeamTask().getName());
+            sendTitle.putExtra(TASK_ID_TAG, task.getId());
             context.startActivity(sendTitle);
         });
     }
