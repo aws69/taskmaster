@@ -29,7 +29,6 @@ public class LogInActivity extends AppCompatActivity {
         EditText usernameEditText= findViewById(R.id.editTextTextEmailAddressVerfy);
         usernameEditText.setText(email);
 
-        //===========================================================
         Button loginButton=findViewById(R.id.verify);
         loginButton.setOnClickListener(v->{
             String username=usernameEditText.getText().toString();
