@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,14 +45,12 @@ public class AddTasksActivity extends AppCompatActivity {
     public static final String TAG="AddTaskActivity";
     CompletableFuture<List<Team>> teamFuture=new CompletableFuture<>();
     ActivityResultLauncher<Intent> activityResultLauncher;
-    private final String s3ImageKey = "";
+    private String s3ImageKey = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tasks);
-
         activityResultLauncher = getImagePickingActivityResultLauncher();
-
         setUpSubmitButton();
         backButton();
         setUpAddImageButton();
@@ -64,14 +64,12 @@ public class AddTasksActivity extends AppCompatActivity {
 
     private void SubmitButton(String imageS3Key){
 
-        // TaskStateSpinner
         Spinner taskCategorySpinner = findViewById(R.id.spinner);
         taskCategorySpinner.setAdapter(new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
                 TaskState.values()));
 
-        // TeamSpinner
         Spinner teamSpinner = findViewById(R.id.teamSpinner);
         Amplify.API.query(
                 ModelQuery.list(Team.class),
@@ -114,7 +112,6 @@ public class AddTasksActivity extends AppCompatActivity {
                 Log.e(TAG,"Execution exception while getting teams");
             }
 
-            assert teams != null;
             Team selectedTeams= teams.stream().filter(c->c.getName().equals(selectedTeamString)).findAny().orElseThrow(RuntimeException::new);
             Task newTask=Task.builder()
                     .name(title)
@@ -129,7 +126,6 @@ public class AddTasksActivity extends AppCompatActivity {
                     failResponse -> Log.i(TAG,"AddTaskActivity.onCreate(): failed to create a task"+failResponse)
             );
 
-            // counter
             TextView count=findViewById(R.id.counter);
             count.setText(String.valueOf(x++));
         });
@@ -146,7 +142,9 @@ public class AddTasksActivity extends AppCompatActivity {
     private void setUpAddImageButton(){
         Button addImageButton = findViewById(R.id.buttonAddImage);
         addImageButton.setOnClickListener(b ->
-                launchImageSelectionIntent());
+        {
+            launchImageSelectionIntent();
+        });
 
     }
 
@@ -161,36 +159,43 @@ public class AddTasksActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> getImagePickingActivityResultLauncher()
     {
-        return registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    Button addImageButton = findViewById(R.id.buttonAddImage);
-                    if (result.getResultCode() == Activity.RESULT_OK)
-                    {
-                        if (result.getData() != null)
+        ActivityResultLauncher<Intent> imagePickingActivityResultLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        new ActivityResultCallback<ActivityResult>()
                         {
-                            Uri pickedImageFileUri = result.getData().getData();
-                            try
+                            @Override
+                            public void onActivityResult(ActivityResult result)
                             {
-                                InputStream pickedImageInputStream = getContentResolver().openInputStream(pickedImageFileUri);
-                                String pickedImageFilename = getFileNameFromUri(pickedImageFileUri);
-                                Log.i(TAG, "Succeeded in getting input stream from file on phone! Filename is: " + pickedImageFilename);
+                                Button addImageButton = findViewById(R.id.buttonAddImage);
+                                if (result.getResultCode() == Activity.RESULT_OK)
+                                {
+                                    if (result.getData() != null)
+                                    {
+                                        Uri pickedImageFileUri = result.getData().getData();
+                                        try
+                                        {
+                                            InputStream pickedImageInputStream = getContentResolver().openInputStream(pickedImageFileUri);
+                                            String pickedImageFilename = getFileNameFromUri(pickedImageFileUri);
+                                            Log.i(TAG, "Succeeded in getting input stream from file on phone! Filename is: " + pickedImageFilename);
 
-                                switchFromAddButtonToDeleteButton(addImageButton);
-                                uploadInputStreamToS3(pickedImageInputStream, pickedImageFilename,pickedImageFileUri);
+                                            switchFromAddButtonToDeleteButton(addImageButton);
+                                            uploadInputStreamToS3(pickedImageInputStream, pickedImageFilename,pickedImageFileUri);
 
-                            } catch (FileNotFoundException fnfe)
-                            {
-                                Log.e(TAG, "Could not get file from file picker! " + fnfe.getMessage(), fnfe);
+                                        } catch (FileNotFoundException fnfe)
+                                        {
+                                            Log.e(TAG, "Could not get file from file picker! " + fnfe.getMessage(), fnfe);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Log.e(TAG, "Activity result error in ActivityResultLauncher.onActivityResult");
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        Log.e(TAG, "Activity result error in ActivityResultLauncher.onActivityResult");
-                    }
-                }
-        );
+                );
+        return imagePickingActivityResultLauncher;
     }
 
     private void uploadInputStreamToS3(InputStream pickedImageInputStream, String pickedImageFilename,Uri pickedImageFileUri)
@@ -218,7 +223,9 @@ public class AddTasksActivity extends AppCompatActivity {
 
                 },
                 failure ->
-                        Log.e(TAG, "Failure in uploading file to S3 with filename: " + pickedImageFilename + " with error: " + failure.getMessage())
+                {
+                    Log.e(TAG, "Failure in uploading file to S3 with filename: " + pickedImageFilename + " with error: " + failure.getMessage());
+                }
         );
     }
 
@@ -226,16 +233,21 @@ public class AddTasksActivity extends AppCompatActivity {
 
     private void setUpDeleteImageButton()
     {
-        Button deleteImageButton = findViewById(R.id.buttonDeletImage);
+        Button deleteImageButton = (Button)findViewById(R.id.buttonAddImage);
         String s3ImageKey = this.s3ImageKey;
         deleteImageButton.setOnClickListener(v ->
         {
             Amplify.Storage.remove(
                     s3ImageKey,
                     success ->
-                            Log.i(TAG, "Succeeded in deleting file on S3! Key is: " + success.getKey()),
+                    {
+                        Log.i(TAG, "Succeeded in deleting file on S3! Key is: " + success.getKey());
+
+                    },
                     failure ->
-                            Log.e(TAG, "Failure in deleting file on S3 with key: " + s3ImageKey + " with error: " + failure.getMessage())
+                    {
+                        Log.e(TAG, "Failure in deleting file on S3 with key: " + s3ImageKey + " with error: " + failure.getMessage());
+                    }
             );
             ImageView productImageView = findViewById(R.id.taskImageImageView);
             productImageView.setImageResource(android.R.color.transparent);
@@ -269,7 +281,6 @@ public class AddTasksActivity extends AppCompatActivity {
         deleteImageButton.setVisibility(View.VISIBLE);
         addImageButton.setVisibility(View.INVISIBLE);
     }
-
     @SuppressLint("Range")
     public String getFileNameFromUri(Uri uri) {
         String result = null;
@@ -291,5 +302,56 @@ public class AddTasksActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent callingIntent = getIntent();
+
+        if (callingIntent != null) {
+            if (callingIntent.getType() != null && callingIntent.getType().equals("text/plain")) {
+                handleTextIntent(callingIntent);
+            }
+            if (callingIntent.getType() != null && callingIntent.getType().startsWith("image")) {
+                handleImageIntent(callingIntent);
+            }
+        }
+    }
+
+    private void handleTextIntent(Intent intent) {
+        String callingText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (callingText != null) {
+            String cleanedText = cleanText(callingText);
+            ((EditText) findViewById(R.id.editTaskTitle)).setText(cleanedText);
+            ((EditText) findViewById(R.id.descriptionEdite)).setText(cleanedText);
+        }
+    }
+
+    private void handleImageIntent(Intent intent) {
+        Uri incomingImageFileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (incomingImageFileUri != null) {
+            try {
+                InputStream incomingImageFileInputStream = getContentResolver().openInputStream(incomingImageFileUri);
+                ImageView taskImageView = findViewById(R.id.taskImageImageView);
+                Log.d(TAG, "Image URI: " + incomingImageFileUri);
+
+
+                if (taskImageView != null) {
+                    taskImageView.setImageBitmap(BitmapFactory.decodeStream(incomingImageFileInputStream));
+                } else {
+                    Log.e(TAG, "ImageView is null for some reason");
+                }
+            } catch (FileNotFoundException fnfe) {
+                Log.e(TAG, "Could not get file stream from the URI " + fnfe.getMessage(), fnfe);
+            }
+        }
+    }
+
+
+    private String cleanText(String text) {
+        text = text.replaceAll("\\b(?:https?|ftp):\\/\\/\\S+\\b", ""); // remove links
+        text = text.replaceAll("\"", ""); // remove double quotation
+
+        return text;
     }
 }
