@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TASK_ID_TAG="task_Id_Tag";
     private String selectedTeam;
     public static final String TAG="homeActivity";
     private TasksRecyclerViewAdapter taskAdapter;
@@ -40,11 +42,12 @@ public class MainActivity extends AppCompatActivity {
         amplifier();
         setUpTaskListRecyclerView();
         queryTasks();
-        AddTasksButton();
-        AllTasksButton();
-        SettingsButton();
-
+        setAddTaskButton();
+        setAllTasksButton();
+        setSettingsButton();
+        setLoginAndLogOutButton();
     }
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
@@ -57,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void amplifier(){
-
         Amplify.API.query(
                 ModelQuery.list(Task.class),
                 success->{
@@ -101,16 +103,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void AddTasksButton() {
-        Button addTaskButton = findViewById(R.id.addTaskButton);
+    private void setAddTaskButton() {
+        Button addTaskButton = findViewById(R.id.addTaskHome);
         addTaskButton.setOnClickListener(view -> {
             Intent goToAddTaskFormIntent = new Intent(MainActivity.this, AddTasksActivity.class);
             startActivity(goToAddTaskFormIntent);
         });
     }
 
-    private void AllTasksButton() {
-        Button allTaskButton = findViewById(R.id.addTaskButton);
+    private void setAllTasksButton() {
+        Button allTaskButton = findViewById(R.id.allTasksHome);
         allTaskButton.setOnClickListener(view -> {
             Intent goToAllTasksIntent = new Intent(MainActivity.this, AllTasksActivity.class);
             startActivity(goToAllTasksIntent);
@@ -118,11 +120,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void SettingsButton() {
+    private void setSettingsButton() {
         ImageButton settingsPage = findViewById(R.id.userProfile);
         settingsPage.setOnClickListener(view -> {
             Intent goToSettings = new Intent(MainActivity.this, UserSettingsActivity.class);
             startActivity(goToSettings);
         });
+    }
+
+    public void setLoginAndLogOutButton(){
+        Button loginButton=findViewById(R.id.buttonLogIn);
+        loginButton.setOnClickListener(v->{
+            Intent goToLogin = new Intent(MainActivity.this, LogInActivity.class);
+            startActivity(goToLogin);
+        });
+
+        Button logoutButton=findViewById(R.id.buttonLogOut);
+        logoutButton.setOnClickListener(v-> Amplify.Auth.signOut(
+                ()-> {Log.i(TAG,"logOut successfully");
+                    runOnUiThread(()-> ((TextView)findViewById(R.id.userNikName)).setText(""));
+                    Intent goToLogin = new Intent(MainActivity.this, LogInActivity.class);
+                    startActivity(goToLogin);
+                },
+                failure->{Log.i(TAG,"logOut failed");
+                    runOnUiThread(()-> Toast.makeText(MainActivity.this,"Logout Failed",Toast.LENGTH_LONG));
+                }));
     }
 }

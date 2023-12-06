@@ -30,12 +30,10 @@ public class AddTasksActivity extends AppCompatActivity {
     int x=1;
     public static final String TAG="AddTaskActivity";
     CompletableFuture<List<Team>> teamFuture=new CompletableFuture<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tasks);
-
         SubmitButton();
         backButton();
     }
@@ -47,6 +45,7 @@ public class AddTasksActivity extends AppCompatActivity {
                 this,
                 android.R.layout.simple_spinner_item,
                 TaskState.values()));
+
 
         Spinner teamSpinner = findViewById(R.id.teamSpinner);
         Amplify.API.query(
@@ -76,7 +75,6 @@ public class AddTasksActivity extends AppCompatActivity {
         Button submitButton= findViewById(R.id.addTaskButton);
         submitButton.setOnClickListener(view -> {
             Toast.makeText(this, "Submitted!", Toast.LENGTH_SHORT).show();
-
             String title=((EditText) findViewById(R.id.taskNameEdite)).getText().toString();
             String body= ((EditText) findViewById(R.id.descriptionEdite)).getText().toString();
             TaskState state=(TaskState) taskCategorySpinner.getSelectedItem();
@@ -105,13 +103,14 @@ public class AddTasksActivity extends AppCompatActivity {
                     failResponse -> Log.i(TAG,"AddTaskActivity.onCreate(): failed to create a task"+failResponse)
             );
 
+            // counter
             TextView count=findViewById(R.id.counter);
             count.setText(String.valueOf(x++));
         });
     }
 
     private void backButton(){
-        Button addTaskBackButton= findViewById(R.id.addTaskButton);
+        Button addTaskBackButton= findViewById(R.id.backButtonAdd);
         addTaskBackButton.setOnClickListener(view -> {
             Intent goBackToHome = new Intent(AddTasksActivity.this, MainActivity.class);
             startActivity(goBackToHome);

@@ -17,6 +17,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
         TaskDetails();
         BackButton();
+        EditTask();
     }
 
     private void TaskDetails(){
@@ -41,11 +42,17 @@ public class TaskDetailsActivity extends AppCompatActivity {
             team.setText(taskTeam);
     }
 
-
     private void BackButton(){
         Button detailsBackButton=findViewById(R.id.backButtonDescription);
         detailsBackButton.setOnClickListener(view -> {
             Intent backToHomeFromDetails= new Intent(TaskDetailsActivity.this,MainActivity.class);
+            startActivity(backToHomeFromDetails);
+        });
+    }
+    private void EditTask(){
+        Button detailsBackButton=findViewById(R.id.editButton);
+        detailsBackButton.setOnClickListener(view -> {
+            Intent backToHomeFromDetails= new Intent(TaskDetailsActivity.this,EditTaskActivity.class);
             startActivity(backToHomeFromDetails);
         });
     }
