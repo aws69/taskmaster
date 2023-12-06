@@ -40,6 +40,8 @@ subscription OnCreateTask($filter: ModelSubscriptionTaskFilterInput) {
     body
     state
     taskImageS3Key
+    taskLatitude
+    taskLongitude
     teamId
     teamTask {
       id
@@ -61,6 +63,8 @@ subscription OnUpdateTask($filter: ModelSubscriptionTaskFilterInput) {
     body
     state
     taskImageS3Key
+    taskLatitude
+    taskLongitude
     teamId
     teamTask {
       id
@@ -82,6 +86,8 @@ subscription OnDeleteTask($filter: ModelSubscriptionTaskFilterInput) {
     body
     state
     taskImageS3Key
+    taskLatitude
+    taskLongitude
     teamId
     teamTask {
       id

@@ -35,6 +35,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TASK_ID_TAG="task_Id_Tag";
+    public static final String TASK_ID_EXTRA = TASK_ID_TAG;
     private String selectedTeam;
     public static final String TAG="homeActivity";
     private TasksRecyclerViewAdapter taskAdapter;
@@ -45,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         selectedTeam = sharedPreferences.getString(UserSettingsActivity.TEAM_TAG, "");
-
         createFile();
         setUpLoginAndLogOutButton();
         amplifier();
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> getImagePickActivityResultLauncher() {
         return null;
     }
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             BufferedWriter emptyFileBufferedWriter= new BufferedWriter(new FileWriter(emptyFile));
 
-            emptyFileBufferedWriter.append("this will write in the file \n aws wrote this ");
+            emptyFileBufferedWriter.append("Some text here from Aws \n Another line from Aws");
 
             emptyFileBufferedWriter.close();
         }catch (IOException ioe){
@@ -127,8 +129,34 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void amplifier(){
+//        Team team1=Team.builder()
+//                .name("Aws").build();
+//
+//        Team team2=Team.builder()
+//                .name("Ethar").build();
+//
+//        Team team3=Team.builder()
+//                .name("Emad").build();
+//
+//        Amplify.API.mutate(
+//                ModelMutation.create(team1),
+//                successResponse->Log.i(TAG,"HomeActivity.amplifier(): made team successfully."),
+//                failedResponse->Log.i(TAG,"HomeActivity.amplifier(): failed to make team."+failedResponse)
+//        );
+//
+//        Amplify.API.mutate(
+//                ModelMutation.create(team2),
+//                successResponse->Log.i(TAG,"HomeActivity.amplifier(): made team successfully."),
+//                failedResponse->Log.i(TAG,"HomeActivity.amplifier(): failed to make team."+failedResponse)
+//        );
+//
+//        Amplify.API.mutate(
+//                ModelMutation.create(team3),
+//                successResponse->Log.i(TAG,"HomeActivity.amplifier(): made team successfully."),
+//                failedResponse->Log.i(TAG,"HomeActivity.amplifier(): failed to make team."+failedResponse)
+//        );
+
         Amplify.API.query(
                 ModelQuery.list(Task.class),
                 success->{
@@ -143,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void queryTasks() {
         Amplify.API.query(
                 ModelQuery.list(Task.class),
@@ -173,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void AddTaskButton() {
-        Button addTaskButton = findViewById(R.id.allTasksHome);
+        Button addTaskButton = findViewById(R.id.addTaskHome);
         addTaskButton.setOnClickListener(view -> {
             Intent goToAddTaskFormIntent = new Intent(MainActivity.this, AddTasksActivity.class);
             startActivity(goToAddTaskFormIntent);
@@ -204,14 +231,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button logoutButton=findViewById(R.id.buttonLogOut);
-        logoutButton.setOnClickListener(v-> Amplify.Auth.signOut(
-                ()-> {Log.i(TAG,"logOut successfully");
-                    runOnUiThread(()-> ((TextView)findViewById(R.id.userNikName)).setText(""));
-                    Intent goToLogin = new Intent(MainActivity.this, LogInActivity.class);
-                    startActivity(goToLogin);
-                },
-                failure->{Log.i(TAG,"logOut failed");
-                    runOnUiThread(()-> Toast.makeText(MainActivity.this,"Logout Failed",Toast.LENGTH_LONG));
-                }));
+        logoutButton.setOnClickListener(v->{
+            Amplify.Auth.signOut(
+                    ()-> {Log.i(TAG,"logOut successfully");
+                        runOnUiThread(()->{
+                            ((TextView)findViewById(R.id.userNikName)).setText("");
+                        });
+                        Intent goToLogin = new Intent(MainActivity.this, LogInActivity.class);
+                        startActivity(goToLogin);
+                    },
+                    failure->{Log.i(TAG,"logOut failed");
+                        runOnUiThread(()-> {
+                            Toast.makeText(MainActivity.this,"Logout Failed",Toast.LENGTH_LONG);
+                        });
+                    });
+        });
+    }
+
+    private void openTaskDetail(String taskTitle, Task task) {
+        Intent taskDetailIntent = new Intent(MainActivity.this, TaskDetailsActivity.class);
+
+        taskDetailIntent.putExtra(TASK_ID_EXTRA, task.getId());
+        taskDetailIntent.putExtra("taskTitle", taskTitle);
+        taskDetailIntent.putExtra("taskBody", task.getBody());
+        taskDetailIntent.putExtra("taskStatus", task.getState().toString());
+        taskDetailIntent.putExtra("taskTeam", task.getTeamTask().toString());
+
+        startActivity(taskDetailIntent);
     }
 }
