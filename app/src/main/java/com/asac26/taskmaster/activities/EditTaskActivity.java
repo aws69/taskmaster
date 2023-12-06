@@ -26,14 +26,14 @@ import java.util.concurrent.ExecutionException;
 
 public class EditTaskActivity extends AppCompatActivity {
 
-    public static final String TAG="editTaskActivity";
-    private CompletableFuture<Task> taskCompletableFuture=null;
-    private CompletableFuture<List<Team>> teamFuture=null;
-    private Task taskToEdit=null;
+    public static final String TAG = "editTaskActivity";
+    private CompletableFuture<Task> taskCompletableFuture = null;
+    private CompletableFuture<List<Team>> teamFuture = null;
+    private Task taskToEdit = null;
     private EditText nameEditText;
     private EditText descriptionEditText;
-    private Spinner taskStateSpinner=null;
-    private Spinner taskTeamSpinner=null;
+    private Spinner taskStateSpinner = null;
+    private Spinner taskTeamSpinner = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class EditTaskActivity extends AppCompatActivity {
         setUpEditItems();
         setUpSaveButton();
         setUpDeleteButton();
+
     }
 
     private void setUpEditItems() {
@@ -132,7 +133,6 @@ public class EditTaskActivity extends AppCompatActivity {
         }
         return 0;
     }
-
     private void setUpSaveButton() {
         Button saveButton = findViewById(R.id.edit);
         saveButton.setOnClickListener(v -> {

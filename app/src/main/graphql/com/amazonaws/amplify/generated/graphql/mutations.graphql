@@ -51,6 +51,7 @@ mutation CreateTask(
     name
     body
     state
+    taskImageS3Key
     teamId
     teamTask {
       id
@@ -74,6 +75,7 @@ mutation UpdateTask(
     name
     body
     state
+    taskImageS3Key
     teamId
     teamTask {
       id
@@ -97,6 +99,7 @@ mutation DeleteTask(
     name
     body
     state
+    taskImageS3Key
     teamId
     teamTask {
       id
