@@ -22,4 +22,5 @@
     <string name="custom_tool_bar">custom tool bar</string>
     <string name="task_status">Task Status</string>
     <string name="task_state" />
+    <string name="team">Team</string>
 </resources>

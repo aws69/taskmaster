@@ -23,11 +23,13 @@ public class TaskDetailsActivity extends AppCompatActivity {
         TextView title=findViewById(R.id.textViewTitle);
         TextView body = findViewById(R.id.textViewDescription);
         TextView status = findViewById(R.id.textViewStatus);
+        TextView team = findViewById(R.id.textViewTeam);
 
         Intent intent=getIntent();
         String taskTitle=intent.getStringExtra("taskTitle");
         String taskBody = intent.getStringExtra("taskBody");
         String taskStatus = intent.getStringExtra("taskStatus");
+        String taskTeam = intent.getStringExtra("taskTeam");
 
         if(taskTitle!=null)
             title.setText(taskTitle);
@@ -35,7 +37,10 @@ public class TaskDetailsActivity extends AppCompatActivity {
             body.setText(taskBody);
         if (taskStatus != null)
             status.setText(taskStatus);
+        if (taskTeam != null)
+            team.setText(taskTeam);
     }
+
 
     private void BackButton(){
         Button detailsBackButton=findViewById(R.id.backButtonDescription);
