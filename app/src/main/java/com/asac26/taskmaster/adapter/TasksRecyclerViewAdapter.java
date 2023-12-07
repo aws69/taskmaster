@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplifyframework.datastore.generated.model.Task;
 import com.asac26.taskmaster.R;
-import com.asac26.taskmaster.activities.EditTaskActivity;
+import com.asac26.taskmaster.activities.TaskDetailsActivity;
 
 import java.util.List;
 
@@ -36,17 +36,22 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task task = taskList.get(position);
-        holder.bindTask(task);
-        holder.itemView.setOnClickListener(view -> {
-            Intent sendTitle = new Intent(context, EditTaskActivity.class);
-            sendTitle.putExtra("taskTitle", task.getName());
-            sendTitle.putExtra("taskBody", task.getBody());
-            sendTitle.putExtra("taskStatus", task.getState().toString());
-            sendTitle.putExtra("taskTeam",task.getTeamTask().getName());
-            sendTitle.putExtra(TASK_ID_TAG, task.getId());
-            context.startActivity(sendTitle);
-        });
+        if (taskList != null && position >= 0 && position < taskList.size()) {
+            Task task = taskList.get(position);
+            holder.bindTask(task);
+            holder.itemView.setOnClickListener(view -> {
+                Intent sendTitle = new Intent(context, TaskDetailsActivity.class);
+                sendTitle.putExtra("taskTitle", task.getName());
+                sendTitle.putExtra("taskBody", task.getBody());
+                sendTitle.putExtra("taskStatus", task.getState().toString());
+                sendTitle.putExtra("taskTeam", task.getTeamTask().getName());
+                sendTitle.putExtra("taskImage", task.getTaskImageS3Key());
+                sendTitle.putExtra("taskLongitude", task.getTaskLongitude());
+                sendTitle.putExtra("taskLatitude", task.getTaskLatitude());
+                sendTitle.putExtra(TASK_ID_TAG, task.getId());
+                context.startActivity(sendTitle);
+            });
+        }
     }
 
     @Override
