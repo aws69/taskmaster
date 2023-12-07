@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.auth.AuthUser;
 import com.amplifyframework.auth.AuthUserAttribute;
@@ -46,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         selectedTeam = sharedPreferences.getString(UserSettingsActivity.TEAM_TAG, "");
         createFile();
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    // Shared Preference
     @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
@@ -71,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "DefaultUsername");
         user.setText(username +"'s Tasks:");
+
+        AnalyticsEvent event = AnalyticsEvent.builder()
+                .name("openedApp")
+                .addProperty("trackingEvent", " main activity opened")
+                .build();
+
+        Amplify.Analytics.recordEvent(event);
 
         AuthUser authUser=Amplify.Auth.getCurrentUser();
         if(authUser==null){
@@ -86,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             Button logoutButton=findViewById(R.id.buttonLogOut);
             logoutButton.setVisibility(View.VISIBLE);
         }
-        //==================================================================
         Amplify.Auth.fetchUserAttributes(
                 success ->
                 {
@@ -130,33 +137,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void amplifier(){
-//        Team team1=Team.builder()
-//                .name("Aws").build();
-//
-//        Team team2=Team.builder()
-//                .name("Ethar").build();
-//
-//        Team team3=Team.builder()
-//                .name("Emad").build();
-//
-//        Amplify.API.mutate(
-//                ModelMutation.create(team1),
-//                successResponse->Log.i(TAG,"HomeActivity.amplifier(): made team successfully."),
-//                failedResponse->Log.i(TAG,"HomeActivity.amplifier(): failed to make team."+failedResponse)
-//        );
-//
-//        Amplify.API.mutate(
-//                ModelMutation.create(team2),
-//                successResponse->Log.i(TAG,"HomeActivity.amplifier(): made team successfully."),
-//                failedResponse->Log.i(TAG,"HomeActivity.amplifier(): failed to make team."+failedResponse)
-//        );
-//
-//        Amplify.API.mutate(
-//                ModelMutation.create(team3),
-//                successResponse->Log.i(TAG,"HomeActivity.amplifier(): made team successfully."),
-//                failedResponse->Log.i(TAG,"HomeActivity.amplifier(): failed to make team."+failedResponse)
-//        );
-
         Amplify.API.query(
                 ModelQuery.list(Task.class),
                 success->{
@@ -183,7 +163,9 @@ public class MainActivity extends AppCompatActivity {
                             tasks.add(databaseTask);
                         }
                     }
-                    runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
+                    runOnUiThread(() -> {
+                        taskAdapter.notifyDataSetChanged();
+                    });
                 },
                 failure -> Log.i(TAG, "Couldn't read tasks from DynamoDB ")
         );
@@ -191,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpTaskListRecyclerView(){
-        RecyclerView taskListRecycleReview = findViewById(R.id.recycleView);
+        RecyclerView taskListRecycleReview = (RecyclerView) findViewById(R.id.recycleView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         taskListRecycleReview.setLayoutManager(layoutManager);
         taskAdapter = new TasksRecyclerViewAdapter(tasks, this);

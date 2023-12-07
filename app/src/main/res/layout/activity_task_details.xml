@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlCompat" />
 
-    <TextView
+    <EditText
         android:id="@+id/textViewDescription"
         android:layout_width="276dp"
         android:layout_height="91dp"
@@ -63,7 +63,7 @@
         android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.201"
+        app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:text="Edit"
         tools:ignore="HardcodedText,MissingConstraints"
-        tools:layout_editor_absoluteX="268dp"
+        tools:layout_editor_absoluteX="295dp"
         tools:layout_editor_absoluteY="655dp" />
 
     <ImageView
@@ -125,5 +125,20 @@
         app:layout_constraintVertical_bias="0.176"
         tools:ignore="HardcodedText" />
 
+    <Button
+        android:id="@+id/readTextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#673AB7"
+        android:text="Read"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskLocationTextView"
+        app:layout_constraintVertical_bias="0.75"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
